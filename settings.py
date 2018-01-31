@@ -11,7 +11,11 @@ SPRITESHEET = "spritesheet_jumper.png"
 PLAYER_ACC = 0.5
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.8
-PLAYER_JUMP = 16
+PLAYER_JUMP = 20
+
+# Game properties
+BOOST_POWER = 60
+POW_SPAWN_PCT = 7
 
 # Starting platforms
 PLATFORM_LIST = [(0, HEIGHT - 60),
