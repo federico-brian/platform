@@ -1,7 +1,7 @@
 # KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 15
-# Video link: https://youtu.be/kCnAhasA1bs
-# Powerups
+# Jumpy! (a platform game) - Part 16
+# Video link: https://youtu.be/IxtNSCYOWck
+# Enemies
 # Art from Kenney.nl
 # Happy Tune by http://opengameart.org/users/syncopika
 # Yippee by http://opengameart.org/users/snabisch
@@ -43,12 +43,14 @@ class Game:
     def new(self):
         # start a new game
         self.score = 0
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.platforms = pg.sprite.Group()
         self.powerups = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         self.player = Player(self)
         for plat in PLATFORM_LIST:
             Platform(self, *plat)
+        self.mob_timer = 0
         pg.mixer.music.load(path.join(self.snd_dir, 'Happy Tune.ogg'))
         self.run()
 
@@ -66,6 +68,17 @@ class Game:
     def update(self):
         # Game Loop - Update
         self.all_sprites.update()
+
+        # spawn a mob?
+        now = pg.time.get_ticks()
+        if now - self.mob_timer > 5000 + random.choice([-1000, -500, 0, 500, 1000]):
+            self.mob_timer = now
+            Mob(self)
+        # hit mobs?
+        mob_hits = pg.sprite.spritecollide(self.player, self.mobs, False)
+        if mob_hits:
+            self.playing = False
+
         # check if player hits a platform - only if falling
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
@@ -84,6 +97,8 @@ class Game:
         # if player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
+            for mob in self.mobs:
+                mob.rect.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
                 plat.rect.y += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
@@ -132,7 +147,6 @@ class Game:
         # Game Loop - draw
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
         # *after* drawing everything, flip the display
         pg.display.flip()
