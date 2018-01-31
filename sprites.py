@@ -1,6 +1,7 @@
 # Sprite classes for platform game
 import pygame as pg
 from settings import *
+from random import choice
 vec = pg.math.Vector2
 
 class Spritesheet:
@@ -26,8 +27,8 @@ class Player(pg.sprite.Sprite):
         self.load_images()
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.pos = vec(WIDTH / 2, HEIGHT / 2)
+        self.rect.center = (40, HEIGHT - 100)
+        self.pos = vec(40, HEIGHT - 100)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -47,9 +48,9 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         # jump only if standing on a platform
-        self.rect.y += 1
+        self.rect.y += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
-        self.rect.y -= 1
+        self.rect.y -= 2
         if hits:
             self.vel.y = -PLAYER_JUMP
 
@@ -106,10 +107,13 @@ class Player(pg.sprite.Sprite):
                 self.rect.bottom = bottom
 
 class Platform(pg.sprite.Sprite):
-    def __init__(self, x, y, w, h):
+    def __init__(self, game, x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((w, h))
-        self.image.fill(GREEN)
+        self.game = game
+        images = [self.game.spritesheet.get_image(0, 288, 380, 94),
+                  self.game.spritesheet.get_image(213, 1662, 201, 100)]
+        self.image = choice(images)
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
