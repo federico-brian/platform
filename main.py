@@ -1,7 +1,7 @@
 # KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 16
-# Video link: https://youtu.be/IxtNSCYOWck
-# Enemies
+# Jumpy! (a platform game) - Part 17
+# Video link: https://youtu.be/Dspz3kaTKUg
+# Using mask collisions
 # Art from Kenney.nl
 # Happy Tune by http://opengameart.org/users/syncopika
 # Yippee by http://opengameart.org/users/snabisch
@@ -75,7 +75,7 @@ class Game:
             self.mob_timer = now
             Mob(self)
         # hit mobs?
-        mob_hits = pg.sprite.spritecollide(self.player, self.mobs, False)
+        mob_hits = pg.sprite.spritecollide(self.player, self.mobs, False, pg.sprite.collide_mask)
         if mob_hits:
             self.playing = False
 
