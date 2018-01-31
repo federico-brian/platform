@@ -1,7 +1,7 @@
 # KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 12
-# Video link: https://youtu.be/qnUVjACD3WM
-# Platform Graphics
+# Jumpy! (a platform game) - Part 13
+# Video link: https://youtu.be/9S7fWevICtY
+# Improved Jumping
 # Art from Kenney.nl
 
 import pygame as pg
@@ -63,8 +63,14 @@ class Game:
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                self.player.pos.y = hits[0].rect.top
-                self.player.vel.y = 0
+                lowest = hits[0]
+                for hit in hits:
+                    if hit.rect.bottom > lowest.rect.bottom:
+                        lowest = hit
+                if self.player.pos.y < lowest.rect.centery:
+                    self.player.pos.y = lowest.rect.top
+                    self.player.vel.y = 0
+                    self.player.jumping = False
 
         # if player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
@@ -103,6 +109,9 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_SPACE:
+                    self.player.jump_cut()
 
     def draw(self):
         # Game Loop - draw
