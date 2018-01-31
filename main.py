@@ -1,7 +1,8 @@
 # KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 8
-# Video link: https://youtu.be/MFv1Ew_nGG0
-# Saving High Score
+# Jumpy! (a platform game) - Part 9
+# Video link: https://youtu.be/mBC5VqxnFLA
+# Using Spritesheets
+# Art from Kenney.nl
 
 import pygame as pg
 import random
@@ -24,11 +25,14 @@ class Game:
     def load_data(self):
         # load high score
         self.dir = path.dirname(__file__)
+        img_dir = path.join(self.dir, 'img')
         with open(path.join(self.dir, HS_FILE), 'r') as f:
             try:
                 self.highscore = int(f.read())
             except:
                 self.highscore = 0
+        # load spritesheet image
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
 
     def new(self):
         # start a new game
