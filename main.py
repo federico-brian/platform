@@ -1,6 +1,6 @@
 # KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 4
-# Video link: https://youtu.be/G8pYfkIajE8
+# Jumpy! (a platform game) - Part 5
+# Video link: https://youtu.be/OmlQ0XCvIn0
 # Jumping
 
 import pygame as pg
@@ -48,6 +48,22 @@ class Game:
             if hits:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
+        # if player reaches top 1/4 of screen
+        if self.player.rect.top <= HEIGHT / 4:
+            self.player.pos.y += abs(self.player.vel.y)
+            for plat in self.platforms:
+                plat.rect.y += abs(self.player.vel.y)
+                if plat.rect.top >= HEIGHT:
+                    plat.kill()
+
+        # spawn new platforms to keep same average number
+        while len(self.platforms) < 6:
+            width = random.randrange(50, 100)
+            p = Platform(random.randrange(0, WIDTH - width),
+                         random.randrange(-75, -30),
+                         width, 20)
+            self.platforms.add(p)
+            self.all_sprites.add(p)
 
     def events(self):
         # Game Loop - events
